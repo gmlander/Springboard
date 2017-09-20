@@ -21,6 +21,7 @@ _LoL_ player performance among teammates has similar analysis hurdles. But unlik
 ### Data Source and Acquisition
 
 The data will be obtained from [Oracle's Elixer]. It is composed of several wide (92 colums) xlsx files that can easily be read and concatenated into a pandas dataframe. The total observations in the dataset are approximately 45k. A [codebook] for the variables is also included.
+
 [Oracle's Elixer]: http://oracleselixir.com/match-data/
 [codebook]: http://oracleselixir.com/match-data/match-data-dictionary/
 
