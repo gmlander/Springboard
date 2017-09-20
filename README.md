@@ -27,3 +27,4 @@ The data will be obtained from [Oracle's Elixer]. It is composed of several wide
 
 ### Deliverables
 
+I will present my findings in a paper with codeblocks and accompany that paper with a plot.ly dashboard that will allow a user to simulate win-rate for a team or individual player by adjusting a set of predetermined parameters.
