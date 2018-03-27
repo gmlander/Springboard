@@ -2,9 +2,14 @@
 
 This repo contains notebooks, data, images, and reports for the 'Relax' takehome challenge of Springboard's Data Science Career Track program.
 
+### Contents
+- [Relax_Challenge_Report.md](https://github.com/gmlander/Springboard/blob/master/Assessments/Relax%20Challenge/Relax_Challenge_Report.md): A written submission for the challenge.
+- [relax.ipynb](https://github.com/gmlander/Springboard/blob/master/Assessments/Relax%20Challenge/relax.ipynb): The notebook used to conduct the analysis for the challenge report.
+- [relax.html](https://github.com/gmlander/Springboard/blob/master/Assessments/Relax%20Challenge/relax.html): An html version of the notebook (to display javascript plots).
+
 ---
 
-## Challenge Prompt
+### Challenge Prompt
 
 The data is available as two attached CSV files:
 - takehome_user_engagement.csv
