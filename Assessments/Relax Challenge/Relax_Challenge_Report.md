@@ -45,8 +45,8 @@ Model results were limited to vague feature importance values (figures [3.1][5] 
 [4]: #invite-source-figure-23
 [5]: #feature-importance-figure-31
 [6]: #shap-summary-plot-figure-32
-[7]: #feature-importance-(figure-41
-[8]: #shap-summary-plot-(figure-42
+[7]: #feature-importance-figure-41
+[8]: #shap-summary-plot-figure-42
 [9]: #model-results
 
 ## Supplemental Materials
