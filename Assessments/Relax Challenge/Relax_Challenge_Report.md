@@ -39,12 +39,12 @@ Model results were limited to vague feature importance values (figures [3.1][5] 
     - The user signed up through the website.
     
     
-[1]: #Visit-Activity-(Figure-1)
-[2]: #Join-Lag-(Figure-2.1)
-[3]: #Email-(Figure-2.2)
-[4]: #Invite-Source-(Figure-2.3)
-[5]: #Feature-Importance-(Figure-3.1)
-[6]: #SHAP-Summary-Plot-(Figure-3.2)
+[1]: #visit-activity-(figure-1)
+[2]: #join-lag-(figure-21)
+[3]: #email-(figure-22)
+[4]: #invite-source-figure-23
+[5]: #feature-importance-(figure-31)
+[6]: #shap-summary-plot-(figure-32)
 [7]: #Feature-Importance-(Figure-4.1)
 [8]: #SHAP-Summary-Plot-(Figure-4.2)
 [9]: #Model-Results
