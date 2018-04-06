@@ -11778,14 +11778,14 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Relax-Data-Challenge-Investigation-Notebook">Relax Data Challenge Investigation Notebook<a class="anchor-link" href="#Relax-Data-Challenge-Investigation-Notebook">&#182;</a></h1><p>This document has not been prepared with interpretability in mind, but rather as a record of steps taken during analysis. Refer to the writeup in this repo for more orderly explaination of results/discoveries.</p>
+<h1 id="Relax-Data-Challenge-Investigation-Notebook">Relax Data Challenge Investigation Notebook<a class="anchor-link" href="#Relax-Data-Challenge-Investigation-Notebook">&#182;</a></h1><p>This document has not been prepared with interpretability in mind, but rather as a record of steps taken during analysis. Refer to the <a href="https://github.com/gmlander/Springboard/blob/master/Assessments/Relax%20Challenge/Relax_Challenge_Report.ipynb">report</a> in this repo for more orderly explaination of results/discoveries.</p>
 <h3 id="Imports,-Data-Reading,-Wrangling,-Cleaning">Imports, Data Reading, Wrangling, Cleaning<a class="anchor-link" href="#Imports,-Data-Reading,-Wrangling,-Cleaning">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[176]:</div>
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -11793,6 +11793,15 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">chardet</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">AdaBoostClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="k">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span> 
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">roc_auc_score</span>
+
+<span class="kn">import</span> <span class="nn">shap</span>
+<span class="kn">import</span> <span class="nn">lightgbm</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 
@@ -11803,7 +11812,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">engagement</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/takehome_user_engagement.csv&#39;</span><span class="p">)</span>
@@ -11824,7 +11833,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[35]:</div>
+<div class="prompt output_prompt">Out[2]:</div>
 
 
 
@@ -11840,7 +11849,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/takehome_users.csv&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;ISO-8859-1&#39;</span><span class="p">)</span>
@@ -11853,7 +11862,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -11868,7 +11877,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[17]:</div>
+<div class="prompt output_prompt">Out[4]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -11981,7 +11990,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">engagement</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -11996,7 +12005,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[36]:</div>
+<div class="prompt output_prompt">Out[5]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12067,7 +12076,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">engagement</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -12103,7 +12112,7 @@ memory usage: 4.8+ MB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
@@ -12155,7 +12164,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[60]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="p">[</span><span class="s1">&#39;creation_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">creation_time</span><span class="p">)</span>
@@ -12178,7 +12187,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[74]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="mf">1.396e+09</span><span class="o">/</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">365</span><span class="p">),</span> <span class="s1">&#39;years.&#39;</span><span class="p">)</span>
@@ -12217,7 +12226,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[73]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="mf">1.396e+09</span><span class="o">/</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">365</span><span class="p">),</span> <span class="s1">&#39;years.&#39;</span><span class="p">)</span>
@@ -12256,7 +12265,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[75]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="p">[</span><span class="s1">&#39;last_session&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">last_session_creation_time</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
@@ -12281,7 +12290,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[84]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">three_visits</span> <span class="o">=</span> <span class="n">engagement</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;user_id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">visited</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
@@ -12304,7 +12313,7 @@ memory usage: 937.6+ KB
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[84]:</div>
+<div class="prompt output_prompt">Out[12]:</div>
 
 
 
@@ -12331,7 +12340,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[128]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># First ensure sort by user and time</span>
@@ -12367,7 +12376,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[139]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="p">[</span><span class="s1">&#39;adopted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">object_id</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">adopt_status</span><span class="p">)</span>
@@ -12391,7 +12400,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[146]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
@@ -12406,7 +12415,7 @@ memory usage: 937.6+ KB
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[146]:</div>
+<div class="prompt output_prompt">Out[15]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12549,7 +12558,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[160]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/takehome_user_engagement.csv&#39;</span><span class="p">)</span>
@@ -12566,7 +12575,7 @@ memory usage: 937.6+ KB
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[160]:</div>
+<div class="prompt output_prompt">Out[16]:</div>
 
 
 
@@ -12582,7 +12591,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[148]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="p">[</span><span class="n">users</span><span class="o">.</span><span class="n">last_session_creation_time</span><span class="o">.</span><span class="n">isnull</span><span class="p">()]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -12597,7 +12606,7 @@ memory usage: 937.6+ KB
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[148]:</div>
+<div class="prompt output_prompt">Out[17]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12733,7 +12742,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[163]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="p">[</span><span class="s1">&#39;visits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">object_id</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;user_id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">visited</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
@@ -12761,7 +12770,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[198]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">original_source</span> <span class="o">=</span> <span class="n">users</span><span class="p">[[</span><span class="s1">&#39;object_id&#39;</span><span class="p">,</span> <span class="s1">&#39;creation_source&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -12777,7 +12786,7 @@ memory usage: 937.6+ KB
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[199]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">corr</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
@@ -12793,12 +12802,12 @@ memory usage: 937.6+ KB
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[199]:</div>
+<div class="prompt output_prompt">Out[20]:</div>
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x60bc3cf128&gt;</pre>
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0xc6218d94a8&gt;</pre>
 </div>
 
 </div>
@@ -13372,7 +13381,7 @@ EARzGRH8gyAIgmAu4/8Bo1eCSVnd1HIAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[196]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
@@ -13659,7 +13668,7 @@ kiR1wCRLkiSpAyZZkiRJHfh//C2jFVd5LLwAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[204]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">first</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">creation_time</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
@@ -13685,7 +13694,7 @@ kiR1wCRLkiSpAyZZkiRJHfh//C2jFVd5LLwAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[251]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">factorplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span> <span class="s1">&#39;adopted&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;join_lag&#39;</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">users</span><span class="p">,</span> <span class="n">kind</span> <span class="o">=</span> <span class="s1">&#39;violin&#39;</span><span class="p">)</span>
@@ -14007,7 +14016,7 @@ kceBGar6vN1aXKzFbbm4uLhYgttycXFxsQS35eLi4mIJrrm4uLhYgmsuLi4uluCai4uLiyW45uLi
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[246]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">rel_pct</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -14026,7 +14035,7 @@ kceBGar6vN1aXKzFbbm4uLhYgttycXFxsQS35eLi4mIJrrm4uLhYgmsuLi4uluCai4uLiyW45uLi
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[250]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">factorplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;adopted&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;adopted&#39;</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s1">&#39;creation_source&#39;</span><span class="p">,</span> <span class="n">col_wrap</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>\
@@ -14382,7 +14391,7 @@ sCRJkiSpJSZYkiRJktSS/we5Xcg3TwC1HgAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[259]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># get email provider</span>
@@ -14399,7 +14408,7 @@ sCRJkiSpJSZYkiRJktSS/we5Xcg3TwC1HgAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[268]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="o">.</span><span class="n">email_provider</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
@@ -14414,7 +14423,7 @@ sCRJkiSpJSZYkiRJktSS/we5Xcg3TwC1HgAAAABJRU5ErkJggg==
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[268]:</div>
+<div class="prompt output_prompt">Out[27]:</div>
 
 
 
@@ -14425,10 +14434,10 @@ jourrapide    1259
 cuvox         1202
 gustr         1179
 hotmail       1165
-mumdc            2
-luque            2
+rerwl            2
 xvnbr            2
-xybhi            2
+mumdc            2
+qgjbc            2
 Name: email_provider, dtype: int64</pre>
 </div>
 
@@ -14440,7 +14449,7 @@ Name: email_provider, dtype: int64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[273]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">emails</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">email_provider</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
@@ -14454,7 +14463,7 @@ Name: email_provider, dtype: int64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[275]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">users</span><span class="o">.</span><span class="n">email_provider</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">big_emails</span><span class="p">),</span> <span class="s1">&#39;email_provider&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;other&#39;</span>
@@ -14467,7 +14476,7 @@ Name: email_provider, dtype: int64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[278]:</div>
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">orig_emails</span> <span class="o">=</span> <span class="n">users</span><span class="p">[[</span><span class="s1">&#39;object_id&#39;</span><span class="p">,</span> <span class="s1">&#39;email_provider&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -14480,7 +14489,7 @@ Name: email_provider, dtype: int64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[279]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;email_provider&#39;</span><span class="p">],</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;email_is&#39;</span><span class="p">)</span>
@@ -14494,7 +14503,7 @@ Name: email_provider, dtype: int64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[280]:</div>
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">factorplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;adopted&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;adopted&#39;</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s1">&#39;email_provider&#39;</span><span class="p">,</span> <span class="n">col_wrap</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>\
@@ -14928,104 +14937,6 @@ rkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Scale-continuous-RV's">Scale continuous RV's<a class="anchor-link" href="#Scale-continuous-RV's">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[299]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="o">.</span><span class="n">columns</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[299]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>Index([&#39;object_id&#39;, &#39;creation_time&#39;, &#39;name&#39;, &#39;email&#39;,
-       &#39;last_session_creation_time&#39;, &#39;opted_in_to_mailing_list&#39;,
-       &#39;enabled_for_marketing_drip&#39;, &#39;org_id&#39;, &#39;invited_by_user_id&#39;,
-       &#39;last_session&#39;, &#39;adopted&#39;, &#39;visits&#39;, &#39;referred&#39;, &#39;source_GUEST_INVITE&#39;,
-       &#39;source_ORG_INVITE&#39;, &#39;source_PERSONAL_PROJECTS&#39;, &#39;source_SIGNUP&#39;,
-       &#39;source_SIGNUP_GOOGLE_AUTH&#39;, &#39;join_lag&#39;, &#39;creation_source&#39;,
-       &#39;email_is_cuvox&#39;, &#39;email_is_gmail&#39;, &#39;email_is_gustr&#39;,
-       &#39;email_is_hotmail&#39;, &#39;email_is_jourrapide&#39;, &#39;email_is_other&#39;,
-       &#39;email_is_yahoo&#39;, &#39;email_provider&#39;, &#39;adopted_inviter&#39;],
-      dtype=&#39;object&#39;)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[253]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">StandardScaler</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[283]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">orig_scale</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
-<span class="n">users</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;join_lag&#39;</span><span class="p">]</span> <span class="o">=</span> \
-<span class="n">orig_scale</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;join_lag&#39;</span><span class="p">])</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt"></div>
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>C:\ProgramData\Anaconda3\lib\site-packages\sklearn\utils\validation.py:429: DataConversionWarning: Data with input dtype int64 was converted to float64 by StandardScaler.
-  warnings.warn(msg, _DataConversionWarning)
-C:\ProgramData\Anaconda3\lib\site-packages\sklearn\preprocessing\data.py:586: DeprecationWarning: Passing 1d arrays as data is deprecated in 0.17 and will raise ValueError in 0.19. Reshape your data either using X.reshape(-1, 1) if your data has a single feature or X.reshape(1, -1) if it contains a single sample.
-  warnings.warn(DEPRECATION_MSG_1D, DeprecationWarning)
-C:\ProgramData\Anaconda3\lib\site-packages\sklearn\preprocessing\data.py:649: DeprecationWarning: Passing 1d arrays as data is deprecated in 0.17 and will raise ValueError in 0.19. Reshape your data either using X.reshape(-1, 1) if your data has a single feature or X.reshape(1, -1) if it contains a single sample.
-  warnings.warn(DEPRECATION_MSG_1D, DeprecationWarning)
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <p>One last feature that might be useful, <code>invited_by_user_id</code>. Use this to create a feature for whether the user was invited by an adopted user or not.</p>
 
 </div>
@@ -15033,7 +14944,7 @@ C:\ProgramData\Anaconda3\lib\site-packages\sklearn\preprocessing\data.py:649: De
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[291]:</div>
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="p">[</span><span class="s1">&#39;adopted_inviter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">invited_by_user_id</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">adopt_status</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
@@ -15046,7 +14957,7 @@ C:\ProgramData\Anaconda3\lib\site-packages\sklearn\preprocessing\data.py:649: De
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[298]:</div>
+<div class="prompt input_prompt">In&nbsp;[41]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">users</span><span class="p">[</span><span class="n">users</span><span class="o">.</span><span class="n">adopted_inviter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">adopted</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">users</span><span class="p">[</span><span class="n">users</span><span class="o">.</span><span class="n">adopted_inviter</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">adopted</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
@@ -15061,7 +14972,7 @@ C:\ProgramData\Anaconda3\lib\site-packages\sklearn\preprocessing\data.py:649: De
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[298]:</div>
+<div class="prompt output_prompt">Out[41]:</div>
 
 
 
@@ -15080,7 +14991,7 @@ C:\ProgramData\Anaconda3\lib\site-packages\sklearn\preprocessing\data.py:649: De
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>As I'd hoped to find. Users invited by an adopted users were much more likely to join than those that weren't.</p>
+<p>As I'd hoped to find. Users invited by adopted users were much more likely to join than those that weren't.</p>
 <h3 id="Feature-selection">Feature selection<a class="anchor-link" href="#Feature-selection">&#182;</a></h3><p>The following will not be used for modeling:</p>
 <ul>
 <li>Identifying features like name/email</li>
@@ -15095,7 +15006,7 @@ C:\ProgramData\Anaconda3\lib\site-packages\sklearn\preprocessing\data.py:649: De
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[435]:</div>
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ignore_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;object_id&#39;</span><span class="p">,</span> <span class="s1">&#39;creation_time&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span><span class="s1">&#39;last_session_creation_time&#39;</span><span class="p">,</span>
@@ -15124,25 +15035,7 @@ C:\ProgramData\Anaconda3\lib\site-packages\sklearn\preprocessing\data.py:649: De
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[361]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">AdaBoostClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="k">import</span> <span class="n">DecisionTreeClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span> 
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">roc_auc_score</span>
-<span class="kn">import</span> <span class="nn">shap</span>
-<span class="kn">import</span> <span class="nn">lightgbm</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[436]:</div>
+<div class="prompt input_prompt">In&nbsp;[43]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">users</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">ignore_cols</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">users</span><span class="o">.</span><span class="n">adopted</span><span class="p">,</span><span class="n">test_size</span><span class="o">=.</span><span class="mi">3</span><span class="p">)</span>
@@ -15164,7 +15057,7 @@ C:\ProgramData\Anaconda3\lib\site-packages\sklearn\preprocessing\data.py:649: De
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[437]:</div>
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># make adaboosted decision stump</span>
@@ -15181,10 +15074,10 @@ C:\ProgramData\Anaconda3\lib\site-packages\sklearn\preprocessing\data.py:649: De
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[438]:</div>
+<div class="prompt input_prompt">In&nbsp;[45]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training accuracy: </span><span class="si">{:0.3f}</span><span class="se">\n</span><span class="s2">Testing accuracy: </span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ada_train_score</span><span class="p">,</span> <span class="n">ada_test_score</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training accuracy: </span><span class="si">{:0.4f}</span><span class="se">\n</span><span class="s2">Testing accuracy: </span><span class="si">{:0.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ada_train_score</span><span class="p">,</span> <span class="n">ada_test_score</span><span class="p">))</span>
 </pre></div>
 
 </div>
@@ -15199,8 +15092,8 @@ C:\ProgramData\Anaconda3\lib\site-packages\sklearn\preprocessing\data.py:649: De
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Training accuracy: 0.863
-Testing accuracy: 0.861
+<pre>Training accuracy: 0.8642
+Testing accuracy: 0.8569
 </pre>
 </div>
 </div>
@@ -15220,7 +15113,7 @@ Testing accuracy: 0.861
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[439]:</div>
+<div class="prompt input_prompt">In&nbsp;[46]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_data</span><span class="o">=</span><span class="n">lightgbm</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
@@ -15233,7 +15126,7 @@ Testing accuracy: 0.861
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[440]:</div>
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;num_leaves&#39;</span><span class="p">:</span><span class="mi">250</span><span class="p">,</span> <span class="s1">&#39;objective&#39;</span><span class="p">:</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span><span class="s1">&#39;max_depth&#39;</span><span class="p">:</span><span class="mi">15</span><span class="p">,</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span><span class="o">.</span><span class="mi">05</span><span class="p">,</span><span class="s1">&#39;max_bin&#39;</span><span class="p">:</span><span class="mi">200</span><span class="p">}</span>
@@ -15247,7 +15140,7 @@ Testing accuracy: 0.861
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[441]:</div>
+<div class="prompt input_prompt">In&nbsp;[48]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">lgb</span> <span class="o">=</span> <span class="n">lightgbm</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">param</span><span class="p">,</span><span class="n">train_data</span><span class="p">,</span><span class="n">num_boost_round</span> <span class="o">=</span> <span class="mi">70</span><span class="p">)</span>
@@ -15260,7 +15153,7 @@ Testing accuracy: 0.861
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[387]:</div>
+<div class="prompt input_prompt">In&nbsp;[49]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">pred_labels</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
@@ -15277,12 +15170,12 @@ Testing accuracy: 0.861
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[442]:</div>
+<div class="prompt input_prompt">In&nbsp;[50]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">lgb_train_score</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">pred_labels</span><span class="p">(</span><span class="n">lgb</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
 <span class="n">lgb_test_score</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_labels</span><span class="p">(</span><span class="n">lgb</span><span class="p">,</span> <span class="n">x_test</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training accuracy: </span><span class="si">{:0.3f}</span><span class="se">\n</span><span class="s2">Testing accuracy: </span><span class="si">{:0.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lgb_train_score</span><span class="p">,</span> <span class="n">lgb_test_score</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training accuracy: </span><span class="si">{:0.4f}</span><span class="se">\n</span><span class="s2">Testing accuracy: </span><span class="si">{:0.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lgb_train_score</span><span class="p">,</span> <span class="n">lgb_test_score</span><span class="p">))</span>
 </pre></div>
 
 </div>
@@ -15297,8 +15190,8 @@ Testing accuracy: 0.861
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Training accuracy: 0.863
-Testing accuracy: 0.861
+<pre>Training accuracy: 0.8645
+Testing accuracy: 0.8572
 </pre>
 </div>
 </div>
@@ -15321,7 +15214,7 @@ Testing accuracy: 0.861
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[443]:</div>
+<div class="prompt input_prompt">In&nbsp;[51]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">ada</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
@@ -15336,21 +15229,21 @@ Testing accuracy: 0.861
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[443]:</div>
+<div class="prompt output_prompt">Out[51]:</div>
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>source_SIGNUP_GOOGLE_AUTH     0.075
-enabled_for_marketing_drip    0.065
-opted_in_to_mailing_list      0.055
-adopted_inviter               0.050
-source_PERSONAL_PROJECTS      0.050
-source_SIGNUP                 0.045
-email_is_cuvox                0.045
-email_is_hotmail              0.045
-email_is_other                0.040
-email_is_gmail                0.040
+<pre>source_SIGNUP_GOOGLE_AUTH     0.080
+email_is_jourrapide           0.060
+opted_in_to_mailing_list      0.060
+email_is_gmail                0.060
+email_is_cuvox                0.055
+source_PERSONAL_PROJECTS      0.055
+email_is_other                0.050
+enabled_for_marketing_drip    0.050
+adopted_inviter               0.045
+email_is_hotmail              0.040
 dtype: float64</pre>
 </div>
 
@@ -15372,7 +15265,7 @@ dtype: float64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[444]:</div>
+<div class="prompt input_prompt">In&nbsp;[52]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">lgb</span><span class="o">.</span><span class="n">feature_importance</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
@@ -15387,21 +15280,21 @@ dtype: float64</pre>
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[444]:</div>
+<div class="prompt output_prompt">Out[52]:</div>
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>opted_in_to_mailing_list      1774
-enabled_for_marketing_drip    1321
-email_is_gmail                 770
-email_is_gustr                 521
-email_is_cuvox                 453
-email_is_jourrapide            429
-email_is_yahoo                 394
-referred                       358
-email_is_other                 308
-email_is_hotmail               292
+<pre>opted_in_to_mailing_list      1429
+enabled_for_marketing_drip    1271
+email_is_gmail                 695
+referred                       536
+email_is_cuvox                 484
+source_GUEST_INVITE            392
+email_is_jourrapide            375
+email_is_gustr                 349
+email_is_other                 311
+email_is_hotmail               272
 dtype: int32</pre>
 </div>
 
@@ -15425,7 +15318,7 @@ dtype: int32</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[445]:</div>
+<div class="prompt input_prompt">In&nbsp;[53]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ada</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">x</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
