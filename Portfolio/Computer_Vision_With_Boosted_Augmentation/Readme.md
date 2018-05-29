@@ -12,4 +12,4 @@ My deliverables will be a series of notebooks covering -- my initial exploration
 While the notebooks are hosted in github, they will be more easily browsed from Google Colab where they were built (and where dependent files are hosted).
 
 [Part 1](https://drive.google.com/file/d/1gXWExvvcdyf9EC4YZ3S-xZBQbOBEMqWB/view?usp=sharing)
-
+[Part 2](https://drive.google.com/file/d/1MZeiP-ICLiAyz59akG2K8xWbnIJHlBIo/view?usp=sharing)
