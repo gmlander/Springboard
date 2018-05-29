@@ -9,7 +9,7 @@ The data was acquired from the competition already. At ~ 30GB, it's a medium dat
 
 Other potential data sets to use for this project could of course be ImageNet or CIFAR. I also think this augmentaion technique could be extensible to NLP by transforming n-grams, but that's a long way off.
 
-Initial findings have been making improvements to the speed of data input to the model through testing different file formats and building a custom generator class to handle pooling / multiprocessing.
+Initial findings have been making improvements to the speed of data input to the model through testing different file formats and building a custom generator class to handle pooling / multiprocessing. I also discovered that Keras' default predict method is incredibly slow and that I will have to freeze the graph any time I perform inference.
 
 My Xception model has made some progress, but is seriously plateaued around 80% accuracy.
 
