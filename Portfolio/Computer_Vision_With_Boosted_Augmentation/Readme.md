@@ -8,3 +8,8 @@ The intended audience is anyone looking to apply state-of-the-art methods to imp
 The data was acquired from the competition already. At ~ 30GB, it's a medium dataset (at least where images are concerned) so instead of cleaning, I will instead be focused on chunk testing and wrangling to make the most efficient pipeline for training.
 
 My deliverables will be a series of notebooks covering -- my initial exploration of the data; model building / training / tuning /pleading; AWS modeling with fast.ai; and finally tying multiple models together with my proposed TTA CNN 'hat'.
+
+While the notebooks are hosted in github, they will be more easily browsed from Google Colab where they were built (and where dependent files are hosted).
+
+[Part 1](https://drive.google.com/file/d/1gXWExvvcdyf9EC4YZ3S-xZBQbOBEMqWB/view?usp=sharing)
+
