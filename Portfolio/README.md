@@ -4,8 +4,8 @@ This repository holds portfolio projects I worked on while completing Springboar
 
 ### Projects
 
-- *Team Composition Analysis*: A study of professional *League of Legends* games, aimed at finding a handful of unique patterns in the playstyles of thousands of players, and using those patterns to better understand how different teams play the game as a whole.
-- *Computer Vision with Hyper-Ensembling*: This project is an attempt to create a more robust method for ensembling through fitting a Neural Network on the predictions of multiple models on sets of transformed images, built using data from the
+- [*Team Composition Analysis*](https://github.com/gmlander/Springboard/tree/master/Portfolio/Team_Composition_Analysis): A study of professional *League of Legends* games, aimed at finding a handful of unique patterns in the playstyles of thousands of players, and using those patterns to better understand how different teams play the game as a whole.
+- [*Computer Vision with Hyper-Ensembling*](https://github.com/gmlander/Springboard/tree/master/Portfolio/Computer_Vision_With_Boosted_Augmentation): This project is an attempt to create a more robust method for ensembling through fitting a Neural Network on the predictions of multiple models on sets of transformed images, built using data from the
 [iMaterialist](https://www.kaggle.com/c/imaterialist-challenge-furniture-2018) competition on kaggle.
 
 #### Other Projects
